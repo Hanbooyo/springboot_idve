@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.ex2.entity.Memo;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -122,6 +123,26 @@ public class MemoRepositoryTests {
 
         Pageable pageable = PageRequest.of(0, 10, sortAll);
         Page<Memo> result = memoRepository.findAll(pageable);
+        result.get().forEach(memo -> {
+            System.out.println(memo);
+        });
+    }
+    //쿼리메소드 테스트
+    @Test
+    public void testQueryMethods() {
+        List<Memo> list = memoRepository.findByMnoBetweenOrderByMnoDesc(70L, 80L);
+
+        for(Memo memo : list) {
+            System.out.println(memo);
+        }
+    }
+
+    @Test
+    public void testQueryMethodWithPageable() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("mno").descending());
+
+        Page<Memo> result = memoRepository.findByMnoBetween(10L, 50L, pageable);
+
         result.get().forEach(memo -> {
             System.out.println(memo);
         });
